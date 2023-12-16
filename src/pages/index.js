@@ -55,6 +55,7 @@ const IndexPage = () => {
       setFilteredEmployers(employers);
     } else {
       setFilteredEmployers([...startingWithLetter, ...startingWithNumber]);
+      setActiveLetter(letter);
     }
 
  
