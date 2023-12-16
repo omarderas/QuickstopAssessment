@@ -1,0 +1,193 @@
+.main-home{
+    color: #aeb9e1;
+    background-image: url("https://images.hdqwalls.com/wallpapers/dark-blue-green-gradient-4k-i4.jpg");
+    height: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-size: cover;
+    background-position: cemter;
+    .container{
+        padding: 20px;
+        background-color: #080f25;
+       // border: 0.6px solid #343b4f;
+        border-radius: 12px;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
+        @media(min-width: 1200px){
+            width: 1300px;
+        }
+        .header{
+            .row{
+                .col-sm-6{
+                    @media(max-width: 767px){
+                        text-align: center;
+                    }
+                    h2{
+                        color: #fff;
+                        font-family: 'Sofia Sans Extra Condensed', sans-serif;
+                        letter-spacing: 1px;
+                        margin-bottom: 0px;
+                    }
+                    p{
+                        padding-bottom: 30px;
+                    }
+                }
+                .col-sm-6.date{
+                    @media(min-width: 768px){
+                    text-align: right;
+                    }
+                    @media(max-width: 767px){
+                        padding-bottom: 40px;
+                    }
+                }
+            }
+        }
+        .row{
+            .col-sm-6{
+                position: relative;
+                .featured-content{
+                    table{
+                        display: grid;
+                        color: #fff;
+                        background-color: #101935;
+                        border: 0.6px solid #343b4f;
+                        box-shadow: 0 2px 7px rgba(20, 20, 43, .06);
+                        border-top-left-radius: 15px;
+                        border-bottom-left-radius: 15px;
+                        overflow-y: scroll;
+                        max-height: 80vh;
+                       
+                        thead{
+                            position: sticky;
+                            top: 0;
+                            width: 100%;
+                            color: #fff;
+                            background-color: #1b663e;
+                            //border-color: rgba(5, 193, 104, .2);
+                            padding-left: 20px;
+                            padding-right: 20px;
+                            .table-header{
+                                h2{
+                                    color: #fff;
+                                    font-family: 'Sofia Sans Extra Condensed', sans-serif;
+                                    letter-spacing: 1px;
+                                    font-size: 24px;
+                                    font-weight: 600;
+                                    line-height: 1.333em;
+                                    float: left;
+                                }
+                                input{
+                                    color: #fff;
+                                    background-color: rgba(5, 193, 104, .2);
+                                    border-color: rgba(5, 193, 104, .9);
+                                    float: right;
+                                    margin-top: 20px;
+                                    padding: 4px;
+                                    @media(min-width: 400px){
+                                    min-width: 226px;
+                                    }
+                                    &:focus-visible {
+                                        outline: unset!important;
+                                    }
+                                }
+                            }
+                            tr{
+                                width: 100%;
+                               
+                                display: flex;
+                                justify-content: space-between;
+                               
+                                th{
+                                    padding: 5px;
+                                    //width: 15%;
+                                }
+                            }
+                        }
+                        tbody{
+                            //margin-top: 15px;
+                            padding: 20px;
+                            tr{
+                                border-bottom: 0.6px solid #37446b;
+                                width: 100%;
+                                
+                                    display: flex;
+                                    justify-content: space-between;
+                                
+                                td{
+                                    padding: 5px;
+                                    color: #aeb9e1;
+                                    //width: 15%;
+                                }
+                            }
+                        }
+                    }
+                }
+                .pagination{
+
+                    button{
+                        color: #14ca74;
+                        background-color: rgba(5, 193, 104, .2);
+                        grid-column-gap: 2px;
+                        border: 0.6px solid rgba(0, 0, 0, 0);
+                        border-radius: 2px;
+                        padding: 2px 4px;
+                        margin: 2px;
+                        transition: .2s all;
+                        &:hover{
+                            color: #fff;
+                        }
+                    
+                    }
+                    button.active{
+                        background-color: #fff;
+                    }
+                }
+            }
+        }
+        .row.questions{
+            margin-top: 40px;
+            .col-sm-12, .col-sm-6{
+                .questions-cont{
+                        background-color: #101935;
+                        border: 0.6px solid #343b4f;
+                        box-shadow: 0 2px 7px rgba(20, 20, 43, 0.06);
+                        border-radius: 15px;
+                        margin-bottom: 40px;
+                        padding: 20px;
+                        h2{
+                            color: #fff;
+                            font-size: 16px;
+                            font-weight: 500;
+                            margin-top: 0px;
+                        }
+                }
+             
+            }
+        }
+        .footer-copyright{
+            text-align: center;
+        }
+    }
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #aeb9e1;
+  }
+  
+  /* Works on Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  *::-webkit-scrollbar-track {
+    background-color: rgba(5, 193, 104, .2);
+  }
+  
+  *::-webkit-scrollbar-thumb {
+    background-color: #fff;
+    //border-radius: 20px;
+   // border: 3px solid #0b2618;
+  }
+  ::placeholder { /* Most modern browsers support this now. */
+    color:    #fff;
+ }

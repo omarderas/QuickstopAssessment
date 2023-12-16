@@ -1,128 +1,197 @@
-import * as React from "react"
-import { Link } from "gatsby"
-import { StaticImage } from "gatsby-plugin-image"
-
+import React, { useState, useEffect } from "react"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
-import * as styles from "../components/index.module.css"
+import { Container, Button, Col } from "react-bootstrap"
+import "../components/main.scss"
 
-const links = [
-  {
-    text: "Tutorial",
-    url: "https://www.gatsbyjs.com/docs/tutorial",
-    description:
-      "A great place to get started if you're new to web development. Designed to guide you through setting up your first Gatsby site.",
-  },
-  {
-    text: "Examples",
-    url: "https://github.com/gatsbyjs/gatsby/tree/master/examples",
-    description:
-      "A collection of websites ranging from very basic to complex/complete that illustrate how to accomplish specific tasks within your Gatsby sites.",
-  },
-  {
-    text: "Plugin Library",
-    url: "https://www.gatsbyjs.com/plugins",
-    description:
-      "Learn how to add functionality and customize your Gatsby site or app with thousands of plugins built by our amazing developer community.",
-  },
-  {
-    text: "Build and Host",
-    url: "https://www.gatsbyjs.com/cloud",
-    description:
-      "Now you’re ready to show the world! Give your Gatsby site superpowers: Build and host on Gatsby Cloud. Get started for free!",
-  },
-]
+const IndexPage = () => {
+  const [employers, setEmployers] = useState([])
+  const [filteredEmployers, setFilteredEmployers] = useState([])
+  const [jobTitles, setJobTitles] = useState([])
+  const [filteredJobTitles, setFilteredJobTitles] = useState([])
+  const [activeLetter, setActiveLetter] = useState('');
 
-const samplePageLinks = [
-  {
-    text: "Page 2",
-    url: "page-2",
-    badge: false,
-    description:
-      "A simple example of linking to another page within a Gatsby site",
-  },
-  { text: "TypeScript", url: "using-typescript" },
-  { text: "Server Side Rendering", url: "using-ssr" },
-  { text: "Deferred Static Generation", url: "using-dsg" },
-]
+  useEffect(() => {
+    // Fetch data from the endpoint
+    fetch("https://auto-pay-api-sgiognjnfa-uc.a.run.app/auto-pay/get-ui-params")
+      .then(response => response.json())
+      .then(data => {
+        if (data && data.employers && data.jobTitles) {
+          setEmployers(data.employers)
+          setFilteredEmployers(data.employers)
+          setJobTitles(data.jobTitles)
+          setFilteredJobTitles(data.jobTitles)
+        }
+      })
+      .catch(error => console.error("Error fetching data:", error))
+  }, [])
 
-const moreLinks = [
-  { text: "Join us on Discord", url: "https://gatsby.dev/discord" },
-  {
-    text: "Documentation",
-    url: "https://gatsbyjs.com/docs/",
-  },
-  {
-    text: "Starters",
-    url: "https://gatsbyjs.com/starters/",
-  },
-  {
-    text: "Showcase",
-    url: "https://gatsbyjs.com/showcase/",
-  },
-  {
-    text: "Contributing",
-    url: "https://www.gatsbyjs.com/contributing/",
-  },
-  { text: "Issues", url: "https://github.com/gatsbyjs/gatsby/issues" },
-]
+  const handleEmployerSearch = (e) => {
+    const searchValue = e.target.value.toLowerCase()
+    const filtered = employers.filter(employer => employer.item.toLowerCase().includes(searchValue) || String(employer.id).includes(searchValue))
+    setFilteredEmployers(filtered)
+  }
 
-const utmParameters = `?utm_source=starter&utm_medium=start-page&utm_campaign=default-starter`
+  const handleJobTitleSearch = (e) => {
+    const searchValue = e.target.value.toLowerCase()
+    const filtered = jobTitles.filter(jobTitle => jobTitle.item.toLowerCase().includes(searchValue) || String(jobTitle.id).includes(searchValue))
+    setFilteredJobTitles(filtered)
+  }
 
-const IndexPage = () => (
-  <Layout>
-    <div className={styles.textCenter}>
-      <StaticImage
-        src="../images/example.png"
-        loading="eager"
-        width={64}
-        quality={95}
-        formats={["auto", "webp", "avif"]}
-        alt=""
-        style={{ marginBottom: `var(--space-3)` }}
-      />
-      <h1>
-        Welcome to <b>Gatsby!</b>
-      </h1>
-      <p className={styles.intro}>
-        <b>Example pages:</b>{" "}
-        {samplePageLinks.map((link, i) => (
-          <React.Fragment key={link.url}>
-            <Link to={link.url}>{link.text}</Link>
-            {i !== samplePageLinks.length - 1 && <> · </>}
-          </React.Fragment>
-        ))}
-        <br />
-        Edit <code>src/pages/index.js</code> to update this page.
-      </p>
-    </div>
-    <ul className={styles.list}>
-      {links.map(link => (
-        <li key={link.url} className={styles.listItem}>
-          <a
-            className={styles.listItemLink}
-            href={`${link.url}${utmParameters}`}
-          >
-            {link.text} ↗
-          </a>
-          <p className={styles.listItemDescription}>{link.description}</p>
-        </li>
-      ))}
-    </ul>
-    {moreLinks.map((link, i) => (
-      <React.Fragment key={link.url}>
-        <a href={`${link.url}${utmParameters}`}>{link.text}</a>
-        {i !== moreLinks.length - 1 && <> · </>}
-      </React.Fragment>
-    ))}
-  </Layout>
-)
+  const paginateEmployers = (letter) => {
+    let startingWithLetter = employers.filter(employer =>
+      employer.item.toLowerCase().startsWith(letter.toLowerCase()) && !/^\d/.test(employer.item)
+    );
 
-/**
- * Head export to define metadata for the page
- *
- * See: https://www.gatsbyjs.com/docs/reference/built-in-components/gatsby-head/
- */
-export const Head = () => <Seo title="Home" />
+    let startingWithNumber = [];
+
+    if (letter === '0-9') {
+      startingWithNumber = employers.filter(employer =>
+        /^\d/.test(employer.item)
+      );
+    }
+
+    if (letter === 'all') {
+      setFilteredEmployers(employers);
+    } else {
+      setFilteredEmployers([...startingWithLetter, ...startingWithNumber]);
+    }
+
+ 
+  };
+
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June', 'July',
+    'August', 'September', 'October', 'November', 'December'
+  ];
+  const currentDate = new Date();
+  const currentDay = currentDate.getDate();
+  const currentMonth = months[currentDate.getMonth()];
+  const currentYear = currentDate.getFullYear();
+
+  return (
+    <Layout>
+      <Seo title="Home" />
+      <div className="main-home">
+        <Container>
+          <div className="header">
+             <div className="row">
+                <div className="col-sm-6">
+                  <h2>Welcome to Quickstop Assessment.</h2>
+                  <p>Relax, take your time, YOU GOT THIS!</p>
+                </div>
+                <div className="col-sm-6 date">
+                  <h2>{currentDay} {currentMonth} {currentYear}</h2>
+                </div>
+             </div>
+          </div>
+          <div className="row">
+            <div className="col-sm-6">
+                <div class="featured-content">
+                <table>
+                  <thead>
+                    <div className="table-header"> 
+                        
+                        <h2>Employers</h2>
+                        <input type="text" placeholder="Search by ID or Employer Name" onChange={handleEmployerSearch} />
+                    </div>
+                    <tr>
+                      <th>ID</th>
+                      <th>Employer Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredEmployers.map(employer => (
+                      <tr key={employer.id}>
+                        <td>{employer.id}</td>
+                        <td>{employer.item}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div className="pagination">
+              
+                  {Array.from({ length: 26 }, (_, index) => String.fromCharCode(65 + index)).map(letter => (
+                    <button
+                      key={letter}
+                      onClick={() => paginateEmployers(letter)}
+                      className={activeLetter === letter ? 'active' : ''}
+                    >
+                      {letter}
+                    </button>
+                    
+                  ))}
+                  <button
+                    onClick={() => paginateEmployers("0-9")}
+                    className={activeLetter === '0-9' ? 'active' : ''}
+                  >
+                    0-9
+                  </button>
+                  <button onClick={() => paginateEmployers("all")}>All</button>
+                </div>
+              </div>
+            
+            </div>
+            <div className="col-sm-6">
+              <div class="featured-content">
+              
+                <table>
+                  <thead>
+                  <div className="table-header"><h2>Job Titles</h2>
+                  <input type="text" placeholder="Search by ID or Job Title" onChange={handleJobTitleSearch} />
+                  </div>
+                    <tr>
+                      <th>ID</th>
+                      <th>Job Title</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredJobTitles.map(jobTitle => (
+                      <tr key={jobTitle.id}>
+                        <td>{jobTitle.id}</td>
+                        <td>{jobTitle.item}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+          <div className="row questions">
+            <div className="col-sm-12">
+              <div className="questions-cont">
+                 <h2>What’s the difference between const and var in JavaScript?</h2>
+                 <p>const and var are used for variable declarations in javascript. Variables declared as const must remain as constants through the entire
+                  function/program. This means that their value cannot change after it has been initialized, and they must be initialized with a value when they are declared.
+                  These variables can only be accessed within the scope they have been declared in, and when used to declare an array or object, the content within the 
+                  arrays or object can be updated.
+                 </p>
+              </div>
+            </div>
+            <div className="col-sm-6">
+              <div className="questions-cont">
+                <h2>Difference between inner join and left join in SQL.</h2>
+                <p>In SQL, the difference between inner join and left join is basically that inner join returns all matching rows within both tables being processed/joined, and left join returns all rows from left table being processed/joined along with matching rows from right table being processed/joined.</p>
+              </div>
+            </div>
+            <div className="col-sm-6">
+              <div className="questions-cont">
+                <h2>Query where the age is greater than 25.</h2>
+                <p>SELECT *<br />
+FROM Employers<br />
+WHERE age > 25;<br />
+</p>
+              </div>
+            </div>
+          </div>
+          <div className="footer-copyright">
+            <p>Copyright © {new Date().getFullYear()} Designed and Developed by Jose Urbina. All Rights Reserved.</p>
+           </div>
+          </Container>
+      </div>
+    </Layout>
+  )
+}
 
 export default IndexPage
